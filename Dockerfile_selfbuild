@@ -29,6 +29,7 @@ RUN yum install -y git gcc gcc-c++ make wget cmake mysql mysql-devel unzip iprou
 	&& cd /usr/local/tarsweb/ && npm install --registry=https://registry.npm.taobao.org
 
 
+
 FROM centos/systemd
 
 WORKDIR /root/
@@ -41,6 +42,7 @@ ENV DBPort 3306
 ENV DBUser root
 ENV DBPassword password
 
+
 # Mysql里tars用户的密码，缺省为tars2015
 ENV DBTarsPass tars2015
 
@@ -51,7 +53,11 @@ COPY --from=builder /home/tarsproto /home/tarsproto
 COPY --from=builder /root/t*.tgz /root/
 COPY --from=builder /root/Tars/framework/sql /root/sql
 
-RUN yum install -y wget mysql unzip iproute which flex bison protobuf zlib kde-l10n-Chinese glibc-common \
+## add dotnet
+
+RUN rpm -Uvh https://packages.microsoft.com/config/rhel/7/packages-microsoft-prod.rpm && yum update
+
+RUN yum install -y wget mysql unzip iproute which flex bison protobuf zlib kde-l10n-Chinese glibc-common dotnet-sdk-2.1 \
 	&& ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
 	&& localedef -c -f UTF-8 -i zh_CN zh_CN.utf8 \
 	&& mkdir -p /usr/local/mysql && ln -s /usr/lib64/mysql /usr/local/mysql/lib && echo "/usr/local/mysql/lib/" >> /etc/ld.so.conf && ldconfig \
