@@ -55,6 +55,7 @@ COPY --from=builder /root/Tars/framework/sql /root/sql
 
 ## add dotnet
 
+RUN yum update
 
 RUN yum install -y wget mysql unzip iproute which flex bison protobuf zlib kde-l10n-Chinese glibc-common centos-release-dotnet rh-dotnet20 \
 	&& ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
