@@ -55,9 +55,11 @@ COPY --from=builder /root/Tars/framework/sql /root/sql
 
 ## add dotnet
 
-RUN yum update
+RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc
+RUN echo -e "[packages-microsoft-com-prod]\nname=packages-microsoft-com-prod \nbaseurl= https://packages.microsoft.com/yumrepos/microsoft-rhel7.3-prod\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/dotnetdev.repo
+RUN yum update -y
 
-RUN yum install -y wget mysql unzip iproute which flex bison protobuf zlib kde-l10n-Chinese glibc-common centos-release-dotnet rh-dotnet20 \
+RUN yum install -y wget mysql unzip iproute which flex bison protobuf zlib kde-l10n-Chinese glibc-common libunwind libicu  dotnet-sdk-2.1.4 \
 	&& ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
 	&& localedef -c -f UTF-8 -i zh_CN zh_CN.utf8 \
 	&& mkdir -p /usr/local/mysql && ln -s /usr/lib64/mysql /usr/local/mysql/lib && echo "/usr/local/mysql/lib/" >> /etc/ld.so.conf && ldconfig \
